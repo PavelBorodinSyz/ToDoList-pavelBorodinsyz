@@ -1,0 +1,75 @@
+li{
+    background-color: rgb(211, 207, 207);
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul{
+    padding: 0px;
+}
+
+.card-inside{
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.to-do{
+    display: flex;
+    justify-content: space-between;
+    padding-right: 6px;
+    padding-left: 6px;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    padding: 16px;
+}
+
+.add-task{
+    display: flex;
+    justify-content: space-between;
+    input {
+        display: block;
+        width: 100%;
+        height: 34px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    button{
+        background-image: linear-gradient(92.88deg, #455EB5 9.16%, #5643CC 43.89%, #673FD7 64.72%);
+        border-radius: 8px;
+        border-style: none;
+        box-sizing: border-box;
+        color: #FFFFFF;
+        cursor: pointer;
+        flex-shrink: 0;
+        font-size: 16px;
+        font-weight: 500;
+        padding: 0 1.6rem;
+        text-align: center;
+        text-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+        transition: all .5s;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
+
+    button:hover {
+        box-shadow: rgba(80, 63, 205, 0.5) 0 1px 30px;
+        transition-duration: .1s;
+    }
+}
+  
