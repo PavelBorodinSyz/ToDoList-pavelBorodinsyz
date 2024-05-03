@@ -1,7 +1,9 @@
-<mat-list>
+<mat-selection-list [multiple]="false" hideSingleSelectionIndicator>
     <mat-list-item *ngFor="let item of items">
-        {{item.id}}
-        {{item.text}}
-        <delete-button matListItemMeta (click)="emitDelete(item.id)"></delete-button>
+        <mat-list-option (click)="emitDesc(item.id)" color="primary" [value]="item.id" [appTooltip]="'Нажми на меня и узнай подробности'">
+            {{item.id}}
+            {{item.text}}
+        </mat-list-option>
+        <delete-button matListItemMeta (click)="emitDelete(item.id)" [appTooltip]="'Удалить задачу'"></delete-button>
     </mat-list-item>
-</mat-list>
+</mat-selection-list>

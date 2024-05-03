@@ -10,8 +10,10 @@ import { IToDo, ToDoListService } from '../../service/to-do-list.service';
 
 export class ToDoListComponent implements OnInit{
   public ToDo: IToDo[] = [];
-  public newToDo: string | undefined;
+  public newToDoName: string | undefined;
+  public newToDoDesc: string | undefined;
   public isLoading: boolean = true;
+  public selectedItemToDo: IToDo['id'] | null = null;
 
   constructor(protected service: ToDoListService) { }
 
@@ -33,6 +35,10 @@ export class ToDoListComponent implements OnInit{
       console.log('Задача номер ' + index + ' успешно удаленна!');
     }
 
+    if(id === this.selectedItemToDo){
+      this.selectedItemToDo = null;
+    }
+
     for(let i=0; i<this.service.TaskToDo.length; i++){
       this.service.TaskToDo[i].id = i+1;
     }
@@ -40,9 +46,22 @@ export class ToDoListComponent implements OnInit{
   }
 
   public addItem(){
-    if(this.newToDo !== undefined){
-      this.service.TaskToDo.push({id: this.service.TaskToDo.length + 1, text: this.newToDo})
+    if(this.newToDoName !== undefined){
+      this.service.TaskToDo.push({
+        id: this.service.TaskToDo.length + 1, 
+        text: this.newToDoName,
+        description: this.newToDoDesc!})
     }
   }
+
+  public setSelectedIdToDo(id: number){
+    this.selectedItemToDo = id;
+  }
+
+  getSelectedToDoDescription(): IToDo["description"] {
+    const array = this.service.TaskToDo;
+    const toDoListItem: IToDo | undefined = array.find(item => item.id === this.selectedItemToDo);
+    return toDoListItem ? toDoListItem.description : "";
+}
 }
 

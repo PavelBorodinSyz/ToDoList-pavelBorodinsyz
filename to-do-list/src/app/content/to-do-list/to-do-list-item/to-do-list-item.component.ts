@@ -10,8 +10,13 @@ import { IToDo } from '../../../service/to-do-list.service';
 export class ToDoListComponentItem {
     @Input() items!: IToDo[];
     @Output() delete: EventEmitter<number> = new EventEmitter();
+    @Output() setDesc: EventEmitter<number> = new EventEmitter();
 
     public emitDelete(id: number){
         this.delete.emit(id);
+    }
+
+    emitDesc(id: number): void {
+      this.setDesc.emit(id);
     }
 }
