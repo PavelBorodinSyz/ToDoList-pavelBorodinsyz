@@ -2,6 +2,6 @@
     <mat-list-item *ngFor="let item of items">
         {{item.id}}
         {{item.text}}
-        <button mat-button-stroked matListItemMeta color="primary" style="color: black;" (click)="emitDelete(item.id)">Удалить</button>
+        <delete-button matListItemMeta (click)="emitDelete(item.id)"></delete-button>
     </mat-list-item>
 </mat-list>

@@ -11,11 +11,15 @@ import { IToDo, ToDoListService } from '../../service/to-do-list.service';
 export class ToDoListComponent implements OnInit{
   public ToDo: IToDo[] = [];
   public newToDo: string | undefined;
+  public isLoading: boolean = true;
 
   constructor(protected service: ToDoListService) { }
 
   ngOnInit(): void {
     this.ToDo = this.service.TaskToDo;
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 500);
   }
 
   protected deleteItem(id: number){
