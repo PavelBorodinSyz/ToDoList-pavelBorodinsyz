@@ -1,0 +1,19 @@
+<div class="container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Лист задач</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <app-to-do-list-item [items]="ToDo" (delete)="deleteItem($event)"></app-to-do-list-item>
+          </mat-card-content>
+          <mat-card-content>
+            <form class="action-form">
+                <mat-form-field  class="input-full-width">
+                  <mat-label>Добавить задачу</mat-label>
+                  <input matInput type="text" [(ngModel)]="newToDo" [ngModelOptions]="{standalone: true}">
+                  <button mat-flat-button matSuffix color="primary" (click)="addItem()">Добавить</button>
+                </mat-form-field>
+              </form>
+          </mat-card-content>
+    </mat-card>
+</div>
