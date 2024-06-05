@@ -6,19 +6,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { TooltipComponent } from './tooltip/tooltip.component';
 import { TooltipDirective } from '../directive/tooltip.directive';
 import { MatCardModule } from '@angular/material/card';
+import { IconButtonComponent } from './icon-button/icon-button.component';
+import { AngularMaterialModule } from '../../angular-material.module';
 
 @NgModule({
   declarations: [
     DeleteButtonComponent,
     SaveButtonComponent,
     TooltipComponent,
-    TooltipDirective
+    TooltipDirective,
+    IconButtonComponent
   ],
   imports: [
     CommonModule,
-    MatButtonModule,
-    MatCardModule
+    AngularMaterialModule
   ],
-  exports: [DeleteButtonComponent, SaveButtonComponent, TooltipDirective]
+  exports: [DeleteButtonComponent, SaveButtonComponent, TooltipDirective, IconButtonComponent]
 })
 export class SharedButtonModule { }

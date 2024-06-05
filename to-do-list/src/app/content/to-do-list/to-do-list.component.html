@@ -11,7 +11,9 @@
             <mat-card-title>Лист задач</mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <app-to-do-list-item [items]="ToDo" (delete)="deleteItem($event)" (setDesc)="setSelectedIdToDo($event)"></app-to-do-list-item>
+            <mat-selection-list [multiple]="false" hideSingleSelectionIndicator>
+              <app-to-do-list-item *ngFor="let item of ToDo" [item]="item" (delete)="deleteItem($event)" (setDesc)="setSelectedIdToDo($event)"></app-to-do-list-item>
+            </mat-selection-list>
           </mat-card-content>
           <mat-card-content>
             <div>
@@ -35,7 +37,7 @@
                   <mat-label>Добавить описание</mat-label>
                   <textarea matInput type="text" [(ngModel)]="newToDoDesc" [ngModelOptions]="{standalone: true}"></textarea>
                 </mat-form-field>
-                <save-button class="fill-button" mat-flat-button title="Добавить" matSuffix (click)="addItem()" [appTooltip]="'Добавить новую задачу'"></save-button>
+                <save-button class="fill-button" [type]="'flat'" title="Добавить" matSuffix (click)="addItem()" [appTooltip]="'Добавить новую задачу'"></save-button>
               </form>
           </mat-card-content>
     </mat-card>

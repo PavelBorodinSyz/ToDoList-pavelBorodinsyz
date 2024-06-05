@@ -6,4 +6,5 @@ import { Component, Input } from '@angular/core';
 })
 export class SaveButtonComponent {
   @Input() title!: string;
+  @Input() type: string = 'none';
 }

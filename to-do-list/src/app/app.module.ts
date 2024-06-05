@@ -9,12 +9,15 @@ import { AngularMaterialModule } from './angular-material.module';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedButtonModule } from './content/items/shared-button.module';
+import { ToastService } from './service/toast.service';
+import { ToastComponent } from './service/toast/toast.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ToDoListComponent,
-    ToDoListComponentItem
+    ToDoListComponentItem,
+    ToastComponent
   ],
   imports: [
     BrowserModule,
@@ -26,6 +29,7 @@ import { SharedButtonModule } from './content/items/shared-button.module';
   ],
   providers: [
     ToDoListService,
+    ToastService,
     provideClientHydration()
   ],
   bootstrap: [AppComponent]

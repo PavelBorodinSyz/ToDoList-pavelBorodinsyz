@@ -7,7 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {MatChipsModule} from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [],
@@ -20,7 +20,8 @@ import {MatChipsModule} from '@angular/material/chips';
     MatListModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    MatChipsModule
+    MatChipsModule,
+    MatIconModule
   ]
 })
 export class AngularMaterialModule { }

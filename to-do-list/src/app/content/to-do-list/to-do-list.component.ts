@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IToDo, ToDoListService } from '../../service/to-do-list.service';
+import { ToastService } from '../../service/toast.service';
 
 
 @Component({
@@ -15,7 +16,8 @@ export class ToDoListComponent implements OnInit{
   public isLoading: boolean = true;
   public selectedItemToDo: IToDo['id'] | null = null;
 
-  constructor(protected service: ToDoListService) { }
+  constructor(protected service: ToDoListService,
+              public toastService: ToastService) { }
 
   ngOnInit(): void {
     this.ToDo = this.service.TaskToDo;
@@ -33,6 +35,7 @@ export class ToDoListComponent implements OnInit{
       array.splice(index, 1);
 
       console.log('Задача номер ' + index + ' успешно удаленна!');
+      this.toastService.showToast('Задача номер ' + index + ' успешно удаленна!');
     }
 
     if(id === this.selectedItemToDo){
@@ -50,7 +53,8 @@ export class ToDoListComponent implements OnInit{
       this.service.TaskToDo.push({
         id: this.service.TaskToDo.length + 1, 
         text: this.newToDoName,
-        description: this.newToDoDesc!})
+        description: this.newToDoDesc!});
+        this.toastService.showToast('Новая задача добавлена');
     }
   }
 
@@ -62,6 +66,6 @@ export class ToDoListComponent implements OnInit{
     const array = this.service.TaskToDo;
     const toDoListItem: IToDo | undefined = array.find(item => item.id === this.selectedItemToDo);
     return toDoListItem ? toDoListItem.description : "";
-}
+  }
 }
 

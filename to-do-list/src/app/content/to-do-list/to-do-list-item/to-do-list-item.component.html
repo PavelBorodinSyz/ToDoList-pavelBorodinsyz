@@ -1,9 +1,22 @@
-<mat-selection-list [multiple]="false" hideSingleSelectionIndicator>
-    <mat-list-item *ngFor="let item of items">
+<ng-container *ngIf="isEditMode; then editTemplate; else viewTemplate"></ng-container>
+
+<ng-template #editTemplate>
+    <mat-list-item>
+        {{item.id}}
+        <mat-form-field subscriptSizing="dynamic">
+            <mat-label>Поле изменений</mat-label>
+            <input matInput type="text" [(ngModel)]="item.text">
+        </mat-form-field>
+        <icon-button matListItemMeta style="margin: 0px;" [icon]="'edit'" [appTooltip]="'Прекратить изменения'" (click)="turnEditMode()"></icon-button>
+    </mat-list-item>
+</ng-template>
+<ng-template #viewTemplate>
+    <mat-list-item>
         <mat-list-option (click)="emitDesc(item.id)" color="primary" [value]="item.id" [appTooltip]="'Нажми на меня и узнай подробности'">
             {{item.id}}
             {{item.text}}
         </mat-list-option>
-        <delete-button matListItemMeta (click)="emitDelete(item.id)" [appTooltip]="'Удалить задачу'"></delete-button>
+        <icon-button matListItemMeta style="margin: 0px;" (click)="turnEditMode()" [icon]="'edit'" [appTooltip]="'Изменить задачу'"></icon-button>
+        <delete-button matListItemMeta style="margin: 0px;" (click)="emitDelete(item.id)" [appTooltip]="'Удалить задачу'"></delete-button>
     </mat-list-item>
-</mat-selection-list>
+</ng-template>
