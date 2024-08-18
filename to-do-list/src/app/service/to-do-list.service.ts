@@ -15,6 +15,10 @@ export class ToDoListService {
         return this.httpClient.get<Array<IToDoListItem>>(this.toDoListUrl);
     }
 
+    getToDoListItemById(itemId: IToDoListItem["id"]): Observable<IToDoListItem> {
+        return this.httpClient.get<IToDoListItem>(this.toDoListUrl + "/" + itemId);
+    }
+
     getToDoListItemsByStatus(status: IToDoListItem["status"]): Observable<Array<IToDoListItem>> {
         return this.httpClient.get<Array<IToDoListItem>>(this.toDoListUrl + "?status=" + status);
     }

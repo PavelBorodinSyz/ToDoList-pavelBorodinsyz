@@ -13,6 +13,7 @@ import { ToastService } from './service/toast.service';
 import { ToastComponent } from './service/toast/toast.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ToDoListCreateComponent } from './content/to-do-list/to-do-list-create/to-do-list-create.component';
+import { ToDoListViewComponent } from './content/to-do-list/to-do-list-view/to-do-list-view.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ToDoListCreateComponent } from './content/to-do-list/to-do-list-create/
     ToDoListComponent,
     ToDoListComponentItem,
     ToastComponent,
-    ToDoListCreateComponent
+    ToDoListCreateComponent,
+    ToDoListViewComponent
   ],
   imports: [
     BrowserModule,

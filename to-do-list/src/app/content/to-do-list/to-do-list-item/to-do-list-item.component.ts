@@ -14,7 +14,6 @@ export class ToDoListComponentItem implements OnInit {
 
     @Output() emitDelete = new EventEmitter<IToDoListItem["id"]>();
     @Output() emitChangeText = new EventEmitter<IToDoListItem["text"]>();
-    @Output() emitShowDesc = new EventEmitter<IToDoListItem["id"]>();
     @Output() emitChangeStatus = new EventEmitter<IToDoListItem["status"]>();
     isEditMode: boolean = false;
     itemTitle!: IToDoListItem["text"];
@@ -32,10 +31,6 @@ export class ToDoListComponentItem implements OnInit {
 
     public emitChangeItem(): void {
       this.emitChangeText.emit(this.itemTitle);
-    }
-
-    public emitShowDescItem(id: number): void {
-      this.emitShowDesc.emit(id);
     }
 
     emitItemStatusChange(matCheckboxChange: MatCheckboxChange): void {

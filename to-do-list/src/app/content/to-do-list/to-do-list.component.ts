@@ -3,6 +3,7 @@ import { ToDoListService } from '../../service/to-do-list.service';
 import { ToastService } from '../../service/toast.service';
 import { EToDoListItemStatus, IToDoListItem, IToDoListItemCreate } from '../models/to-do-list';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -14,13 +15,13 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 export class ToDoListComponent implements OnInit{
   public ToDo: Array<IToDoListItem> = [];
   public isLoading: boolean = true;
-  public selectedItemId: IToDoListItem["id"] | null = null;
   public editedItemId: IToDoListItem["id"] | null = null;
   public toDoListItemEnum = EToDoListItemStatus;
 
   constructor(protected service: ToDoListService,
-              public toastService: ToastService,
-              public toDoListService: ToDoListService) { }
+              private toastService: ToastService,
+              private activatedRoute: ActivatedRoute,
+              private toDoListService: ToDoListService) { }
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -35,8 +36,6 @@ export class ToDoListComponent implements OnInit{
                 const deletedItemIndex = this.ToDo.findIndex(item => item.id === id);
                 if (deletedItemIndex > -1)
                     this.ToDo.splice(deletedItemIndex, 1);
-                if (id === this.selectedItemId)
-                    this.selectedItemId = null;
                 this.toastService.showToast("Todo deleted");
             },
             error: () => {
@@ -45,24 +44,9 @@ export class ToDoListComponent implements OnInit{
         });
     }
 
-  /* public addItem(){
-    if(this.newToDoName !== undefined){
-      this.service.TaskToDo.push({
-        id: this.service.TaskToDo.length + 1, 
-        text: this.newToDoName,
-        description: this.newToDoDesc!});
-        this.toastService.showToast('Новая задача добавлена');
-    }
-  } */
-
-  public setSelectedIdToDo(id: number){
-    this.selectedItemId = id;
-  }
-
-  getSelectedToDoDescription(): IToDoListItem["description"] {
-    const array = this.ToDo;
-    const toDoListItem: IToDoListItem | undefined = array.find(item => item.id === this.selectedItemId);
-    return toDoListItem ? toDoListItem.description : "";
+  public get getItemIdFromRoute(): number | null {
+    return this.activatedRoute.snapshot.children.length === 0 ?
+      null : +this.activatedRoute.snapshot.children[0].params['id'];
   }
 
   getToDoList(): void {
