@@ -1,20 +1,41 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-
-export interface IToDo{
-    id: number;
-    text: string;
-    description: string;
-}
+import { Observable } from "rxjs";
+import { EToDoListItemStatus, IToDoListItem } from "../content/models/to-do-list";
 
 @Injectable()
 
 export class ToDoListService {
 
-    public TaskToDo: IToDo[] = [
-        {id: 1, text: 'Покормить кота', description: 'Он хочет кушать'},
-        {id: 2, text: 'Поставить чайник', description: 'Надо вскипятить воду'},
-        {id: 3, text: 'Выключить чайник', description: 'Чтобы дом не сгорел'},
-        {id: 4, text: 'Налить чай', description: 'Крепкий, свежий чай'},
-        {id: 5, text: 'Выпить чай', description: 'Насладиться вкусом'},
-    ]
+    private toDoListUrl = "http://localhost:3000/to-do-list";
+
+    constructor(private httpClient: HttpClient,) { }
+
+    getToDoListItems(): Observable<Array<IToDoListItem>> {
+        return this.httpClient.get<Array<IToDoListItem>>(this.toDoListUrl);
+    }
+
+    getToDoListItemsByStatus(status: IToDoListItem["status"]): Observable<Array<IToDoListItem>> {
+        return this.httpClient.get<Array<IToDoListItem>>(this.toDoListUrl + "?status=" + status);
+    }
+    
+    addToDoListItem(text: IToDoListItem["text"], description: IToDoListItem["description"]): Observable<IToDoListItem> {
+        return this.httpClient.post<IToDoListItem>(this.toDoListUrl, {
+            text: text,
+            description: description,
+            status: EToDoListItemStatus.InProgress
+        });
+    }
+
+    deleteToDoListItemById(itemId: IToDoListItem["id"]): Observable<void> {
+        return this.httpClient.delete<void>(this.toDoListUrl + "/" + itemId);
+    }
+
+    editItemTitleById(itemId: IToDoListItem["id"], text: IToDoListItem["text"]): Observable<IToDoListItem> {
+        return this.httpClient.patch<IToDoListItem>(this.toDoListUrl + "/" + itemId, { text: text });
+    }
+
+    editItemStatusById(itemId: IToDoListItem["id"], itemStatus: IToDoListItem["status"]): Observable<IToDoListItem> {
+        return this.httpClient.patch<IToDoListItem>(this.toDoListUrl + "/" + itemId, { status: itemStatus });
+    }
 }

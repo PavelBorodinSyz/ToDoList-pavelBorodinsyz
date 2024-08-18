@@ -5,6 +5,5 @@ import { Component, Input } from '@angular/core';
   templateUrl: './save-button.component.html'
 })
 export class SaveButtonComponent {
-  @Input() title!: string;
   @Input() type: string = 'none';
 }

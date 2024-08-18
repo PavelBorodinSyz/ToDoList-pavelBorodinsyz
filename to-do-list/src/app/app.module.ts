@@ -6,18 +6,21 @@ import { ToDoListComponent } from './content/to-do-list/to-do-list.component';
 import { ToDoListComponentItem } from './content/to-do-list/to-do-list-item/to-do-list-item.component';
 import { ToDoListService } from './service/to-do-list.service';
 import { AngularMaterialModule } from './angular-material.module';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedButtonModule } from './content/items/shared-button.module';
 import { ToastService } from './service/toast.service';
 import { ToastComponent } from './service/toast/toast.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ToDoListCreateComponent } from './content/to-do-list/to-do-list-create/to-do-list-create.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ToDoListComponent,
     ToDoListComponentItem,
-    ToastComponent
+    ToastComponent,
+    ToDoListCreateComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +28,9 @@ import { ToastComponent } from './service/toast/toast.component';
     AppRoutingModule,
     AngularMaterialModule,
     FormsModule,
-    SharedButtonModule
+    SharedButtonModule,
+    HttpClientModule,
+    ReactiveFormsModule 
   ],
   providers: [
     ToDoListService,

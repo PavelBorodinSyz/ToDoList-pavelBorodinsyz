@@ -9,27 +9,6 @@
 mat-form-field.mat-form-field {
     width: 100%;
 }
-  
-.action-form {
-    min-width: 150px;
-    max-width: 500px;
-    width: 100%;
-}
-
-.input-full-width {
-    width: 100%;
-}
-
-.spinner-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-mat-form-field {
-    margin-bottom: -1.25em;
-}
 
 .fill-button {
     display: grid;

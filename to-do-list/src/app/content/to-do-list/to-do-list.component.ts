@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { IToDo, ToDoListService } from '../../service/to-do-list.service';
+import { ToDoListService } from '../../service/to-do-list.service';
 import { ToastService } from '../../service/toast.service';
+import { EToDoListItemStatus, IToDoListItem, IToDoListItemCreate } from '../models/to-do-list';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
 
 
 @Component({
@@ -10,45 +12,40 @@ import { ToastService } from '../../service/toast.service';
 })
 
 export class ToDoListComponent implements OnInit{
-  public ToDo: IToDo[] = [];
-  public newToDoName: string | undefined;
-  public newToDoDesc: string | undefined;
+  public ToDo: Array<IToDoListItem> = [];
   public isLoading: boolean = true;
-  public selectedItemToDo: IToDo['id'] | null = null;
+  public selectedItemId: IToDoListItem["id"] | null = null;
+  public editedItemId: IToDoListItem["id"] | null = null;
+  public toDoListItemEnum = EToDoListItemStatus;
 
   constructor(protected service: ToDoListService,
-              public toastService: ToastService) { }
+              public toastService: ToastService,
+              public toDoListService: ToDoListService) { }
 
   ngOnInit(): void {
-    this.ToDo = this.service.TaskToDo;
     setTimeout(() => {
       this.isLoading = false;
     }, 500);
+    this.getToDoList();
   }
 
   protected deleteItem(id: number){
-    const array = this.service.TaskToDo;
-
-    const index = array.findIndex(item => item.id === id);
-
-    if(index !== -1){
-      array.splice(index, 1);
-
-      console.log('Задача номер ' + index + ' успешно удаленна!');
-      this.toastService.showToast('Задача номер ' + index + ' успешно удаленна!');
+        this.toDoListService.deleteToDoListItemById(id).subscribe({
+            next: () => {
+                const deletedItemIndex = this.ToDo.findIndex(item => item.id === id);
+                if (deletedItemIndex > -1)
+                    this.ToDo.splice(deletedItemIndex, 1);
+                if (id === this.selectedItemId)
+                    this.selectedItemId = null;
+                this.toastService.showToast("Todo deleted");
+            },
+            error: () => {
+                this.toastService.showToast("Failed to delete todo");
+            }
+        });
     }
 
-    if(id === this.selectedItemToDo){
-      this.selectedItemToDo = null;
-    }
-
-    for(let i=0; i<this.service.TaskToDo.length; i++){
-      this.service.TaskToDo[i].id = i+1;
-    }
-    this.ngOnInit();
-  }
-
-  public addItem(){
+  /* public addItem(){
     if(this.newToDoName !== undefined){
       this.service.TaskToDo.push({
         id: this.service.TaskToDo.length + 1, 
@@ -56,16 +53,84 @@ export class ToDoListComponent implements OnInit{
         description: this.newToDoDesc!});
         this.toastService.showToast('Новая задача добавлена');
     }
-  }
+  } */
 
   public setSelectedIdToDo(id: number){
-    this.selectedItemToDo = id;
+    this.selectedItemId = id;
   }
 
-  getSelectedToDoDescription(): IToDo["description"] {
-    const array = this.service.TaskToDo;
-    const toDoListItem: IToDo | undefined = array.find(item => item.id === this.selectedItemToDo);
+  getSelectedToDoDescription(): IToDoListItem["description"] {
+    const array = this.ToDo;
+    const toDoListItem: IToDoListItem | undefined = array.find(item => item.id === this.selectedItemId);
     return toDoListItem ? toDoListItem.description : "";
+  }
+
+  getToDoList(): void {
+    this.toDoListService.getToDoListItems().subscribe({
+        next: (receivedToDoListItems) => {
+            this.ToDo = receivedToDoListItems;
+        },
+        error: () => {
+            this.toastService.showToast("Failed to load todo list");
+        }
+    });
+  }
+
+  addToDoListItem(formData: IToDoListItemCreate): void {
+    this.toDoListService.addToDoListItem(formData.text, formData.description).subscribe({
+        next: (addedToDoListItem) => {
+            this.ToDo.push(addedToDoListItem);
+            this.toastService.showToast("Item added");
+        },
+        error: () => {
+            this.toastService.showToast("Failed to add todo");
+        }
+    });
+  }
+
+  editToDoListItemTitleById(itemId: IToDoListItem["id"], title: IToDoListItem["text"]): void {
+    if (this.toDoListService.editItemTitleById(itemId, title)) {
+        this.editedItemId = null;
+        this.toastService.showToast("Item edited");
+    }
+    this.toDoListService.editItemTitleById(itemId, title).subscribe({
+        next: (editedToDoListItem) => {
+            const deprecatedItemIndex = this.ToDo.findIndex(item => item.id === editedToDoListItem.id);
+            this.ToDo[deprecatedItemIndex] = editedToDoListItem;
+            this.editedItemId = null;
+            this.toastService.showToast("Item edited");
+        },
+        error: () => {
+            this.toastService.showToast("Failed to edit todo");
+        }
+    });
+}
+
+  editToDoListItemStatusById(itemId: IToDoListItem["id"], itemStatus: IToDoListItem["status"]): void {
+    this.toDoListService.editItemStatusById(itemId, itemStatus).subscribe({
+        next: (editedToDoListItem) => {
+            const deprecatedItemIndex = this.ToDo.findIndex(item => item.id === editedToDoListItem.id);
+            this.ToDo[deprecatedItemIndex] = editedToDoListItem;
+            this.toastService.showToast("Task status has been changed");
+        },
+        error: () => {
+            this.toastService.showToast("Failed to edit todo");
+        }
+    });
+  }
+
+  onStatusFilterChange(matButtonToggleChange: MatButtonToggleChange): void {
+    if (matButtonToggleChange.value === null)
+        this.getToDoList();
+    else
+        this.toDoListService.getToDoListItemsByStatus(matButtonToggleChange.value).subscribe({
+            next: (receivedToDoListItems) => {
+                this.ToDo = receivedToDoListItems;
+            },
+            error: () => {
+                this.toastService.showToast("Failed to load todo list");
+            }
+        });
   }
 }
 

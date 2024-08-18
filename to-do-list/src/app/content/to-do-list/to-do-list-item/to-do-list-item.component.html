@@ -1,22 +1,25 @@
-<ng-container *ngIf="isEditMode; then editTemplate; else viewTemplate"></ng-container>
+<div class="item-container">
+    <mat-checkbox [checked]="item.status === toDoListItemStatus.Completed" (change)="emitItemStatusChange($event)" />
+    <ng-container *ngIf="isEditMode; then editTemplate; else viewTemplate"></ng-container>
+</div>
 
 <ng-template #editTemplate>
     <mat-list-item>
         {{item.id}}
         <mat-form-field subscriptSizing="dynamic">
             <mat-label>Поле изменений</mat-label>
-            <input matInput type="text" [(ngModel)]="item.text">
+            <input matInput type="text" [(ngModel)]="itemTitle">
         </mat-form-field>
         <icon-button matListItemMeta style="margin: 0px;" [icon]="'edit'" [appTooltip]="'Прекратить изменения'" (click)="turnEditMode()"></icon-button>
     </mat-list-item>
 </ng-template>
 <ng-template #viewTemplate>
     <mat-list-item>
-        <mat-list-option (click)="emitDesc(item.id)" color="primary" [value]="item.id" [appTooltip]="'Нажми на меня и узнай подробности'">
+        <mat-list-option (click)="emitShowDescItem(item.id)" color="primary" [value]="item.id" [appTooltip]="'Нажми на меня и узнай подробности'">
             {{item.id}}
             {{item.text}}
         </mat-list-option>
         <icon-button matListItemMeta style="margin: 0px;" (click)="turnEditMode()" [icon]="'edit'" [appTooltip]="'Изменить задачу'"></icon-button>
-        <delete-button matListItemMeta style="margin: 0px;" (click)="emitDelete(item.id)" [appTooltip]="'Удалить задачу'"></delete-button>
+        <delete-button matListItemMeta style="margin: 0px;" (click)="emitDeleteItem(item.id)" [appTooltip]="'Удалить задачу'">Удалить</delete-button>
     </mat-list-item>
 </ng-template>

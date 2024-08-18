@@ -1,0 +1,11 @@
+<form [formGroup]="toDoItemForm" class="action-form">
+    <mat-form-field class="input-full-width">
+      <mat-label>Добавить задачу</mat-label>
+      <input matInput type="text" formControlName="text">
+    </mat-form-field>
+    <mat-form-field  class="input-full-width">
+      <mat-label>Добавить описание</mat-label>
+      <textarea matInput type="text" formControlName="description"></textarea>
+    </mat-form-field>
+    <save-button class="fill-button" [type]="'stroked'" matSuffix (click)="emitCreatingItem()" [appTooltip]="'Добавить новую задачу'">Сохранить</save-button>
+  </form>

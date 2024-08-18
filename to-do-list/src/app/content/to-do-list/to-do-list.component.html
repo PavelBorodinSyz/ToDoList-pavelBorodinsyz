@@ -1,24 +1,32 @@
 <ng-container *ngIf="isLoading === true; then loadingTemplate; else toDoListTemplate" />
 <ng-template #loadingTemplate>
-  <div class="spinner-container">
-      <mat-spinner [diameter]="50"></mat-spinner>
-  </div>
+  <app-loading-spinner></app-loading-spinner>
 </ng-template>
 <ng-template #toDoListTemplate>
   <div class="container">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>Лист задач</mat-card-title>
+            <mat-card-title>
+              <span>Лист задач</span>
+              <mat-button-toggle-group [value]="null" (change)="onStatusFilterChange($event)">
+                <mat-button-toggle [value]="null">All</mat-button-toggle>
+                <mat-button-toggle [value]="toDoListItemEnum.InProgress">In progress</mat-button-toggle>
+                <mat-button-toggle [value]="toDoListItemEnum.Completed">Completed</mat-button-toggle>
+            </mat-button-toggle-group>
+            </mat-card-title>
           </mat-card-header>
           <mat-card-content>
             <mat-selection-list [multiple]="false" hideSingleSelectionIndicator>
-              <app-to-do-list-item *ngFor="let item of ToDo" [item]="item" (delete)="deleteItem($event)" (setDesc)="setSelectedIdToDo($event)"></app-to-do-list-item>
+              <app-to-do-list-item *ngFor="let item of ToDo" [item]="item" 
+              (emitDelete)="deleteItem($event)" (emitShowDesc)="setSelectedIdToDo($event)"
+              (emitChangeText)="editToDoListItemTitleById(item.id, $event)"
+              (emitChangeStatus)="editToDoListItemStatusById(item.id, $event)"></app-to-do-list-item>
             </mat-selection-list>
           </mat-card-content>
           <mat-card-content>
             <div>
               <h3>Описание</h3>
-              <ng-container *ngIf="selectedItemToDo !== null; then descriptionTemplate; else hintTemplate" />
+              <ng-container *ngIf="selectedItemId !== null; then descriptionTemplate; else hintTemplate" />
               <ng-template #descriptionTemplate>
                   <p>{{getSelectedToDoDescription()}}</p>
               </ng-template>
@@ -28,17 +36,7 @@
             </div>
           </mat-card-content>
           <mat-card-content>
-            <form class="action-form">
-                <mat-form-field class="input-full-width">
-                  <mat-label>Добавить задачу</mat-label>
-                  <input matInput type="text" [(ngModel)]="newToDoName" [ngModelOptions]="{standalone: true}">
-                </mat-form-field>
-                <mat-form-field  class="input-full-width">
-                  <mat-label>Добавить описание</mat-label>
-                  <textarea matInput type="text" [(ngModel)]="newToDoDesc" [ngModelOptions]="{standalone: true}"></textarea>
-                </mat-form-field>
-                <save-button class="fill-button" [type]="'flat'" title="Добавить" matSuffix (click)="addItem()" [appTooltip]="'Добавить новую задачу'"></save-button>
-              </form>
+            <app-to-do-list-create (emitNewItem)="addToDoListItem($event)"></app-to-do-list-create>
           </mat-card-content>
     </mat-card>
 </div>
