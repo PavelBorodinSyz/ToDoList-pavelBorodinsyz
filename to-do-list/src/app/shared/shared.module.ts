@@ -7,7 +7,7 @@ import { TooltipComponent } from './tooltip/tooltip.component';
 import { TooltipDirective } from '../directive/tooltip.directive';
 import { MatCardModule } from '@angular/material/card';
 import { IconButtonComponent } from './icon-button/icon-button.component';
-import { AngularMaterialModule } from '../../angular-material.module';
+import { AngularMaterialModule } from '../angular-material.module';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
 @NgModule({
@@ -25,4 +25,4 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
   ],
   exports: [DeleteButtonComponent, SaveButtonComponent, TooltipDirective, IconButtonComponent, LoadingSpinnerComponent]
 })
-export class SharedButtonModule { }
+export class SharedModule { }

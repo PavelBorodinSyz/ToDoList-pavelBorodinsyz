@@ -1,5 +1,5 @@
 import { Component, Output, OnInit, EventEmitter } from '@angular/core';
-import { IToDoListItemCreate } from '../../models/to-do-list';
+import { IToDoListItemCreate } from '../../../../models/to-do-list';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({

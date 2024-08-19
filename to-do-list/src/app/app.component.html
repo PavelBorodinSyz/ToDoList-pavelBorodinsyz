@@ -1,5 +1,16 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-<router-outlet>
-  <app-to-do-list></app-to-do-list>
-</router-outlet>
+<div class="side-nav">
+  <h1 class="header">Доска задач</h1>
+  <div class="navigation">
+      <a mat-button [routerLink]="'/backlog'" routerLinkActive="selected" [appTooltip]="'Перейти к задачам'">
+          Задачи
+      </a>
+      <a mat-button [routerLink]="'/board'" routerLinkActive="selected" [appTooltip]="'Перейти ко всем задачам'">
+          Все задачи
+      </a>
+  </div>
+</div>
+<div class="content">
+  <router-outlet></router-outlet>
+</div>

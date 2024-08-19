@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { ToDoListService } from '../../../service/to-do-list.service';
-import { ToastService } from '../../../service/toast.service';
+import { ToDoListService } from '../../../../service/to-do-list.service';
+import { ToastService } from '../../../../service/toast.service';
 import { ActivatedRoute } from '@angular/router';
-import { IToDoListItem } from '../../models/to-do-list';
+import { IToDoListItem } from '../../../../models/to-do-list';
 import { Subject, takeUntil } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 

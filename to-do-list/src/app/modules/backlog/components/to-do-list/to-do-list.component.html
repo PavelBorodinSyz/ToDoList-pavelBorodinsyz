@@ -9,9 +9,9 @@
             <mat-card-title>
               <span>Лист задач</span>
               <mat-button-toggle-group [value]="null" (change)="onStatusFilterChange($event)">
-                <mat-button-toggle [value]="null">All</mat-button-toggle>
-                <mat-button-toggle [value]="toDoListItemEnum.InProgress">In progress</mat-button-toggle>
-                <mat-button-toggle [value]="toDoListItemEnum.Completed">Completed</mat-button-toggle>
+                <mat-button-toggle [value]="null">Все</mat-button-toggle>
+                <mat-button-toggle [value]="toDoListItemEnum.InProgress">В процессе</mat-button-toggle>
+                <mat-button-toggle [value]="toDoListItemEnum.Completed">Выполнены</mat-button-toggle>
             </mat-button-toggle-group>
             </mat-card-title>
           </mat-card-header>

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ToDoListService } from '../../service/to-do-list.service';
-import { ToastService } from '../../service/toast.service';
-import { EToDoListItemStatus, IToDoListItem, IToDoListItemCreate } from '../models/to-do-list';
+import { ToDoListService } from '../../../../service/to-do-list.service';
+import { ToastService } from '../../../../service/toast.service';
+import { EToDoListItemStatus, IToDoListItem, IToDoListItemCreate } from '../../../../models/to-do-list';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { ActivatedRoute } from '@angular/router';
+import { tap } from 'rxjs';
 
 
 @Component({
@@ -24,9 +25,6 @@ export class ToDoListComponent implements OnInit{
               private toDoListService: ToDoListService) { }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 500);
     this.getToDoList();
   }
 
@@ -36,10 +34,10 @@ export class ToDoListComponent implements OnInit{
                 const deletedItemIndex = this.ToDo.findIndex(item => item.id === id);
                 if (deletedItemIndex > -1)
                     this.ToDo.splice(deletedItemIndex, 1);
-                this.toastService.showToast("Todo deleted");
+                this.toastService.showToast("Задача удалена");
             },
             error: () => {
-                this.toastService.showToast("Failed to delete todo");
+                this.toastService.showToast("Ошибка при удалении задачи");
             }
         });
     }
@@ -50,13 +48,17 @@ export class ToDoListComponent implements OnInit{
   }
 
   getToDoList(): void {
-    this.toDoListService.getToDoListItems().subscribe({
+    this.toDoListService.getToDoListItems().pipe(
+        tap(() => this.isLoading = true),
+    )
+    .subscribe({
         next: (receivedToDoListItems) => {
             this.ToDo = receivedToDoListItems;
         },
         error: () => {
-            this.toastService.showToast("Failed to load todo list");
-        }
+            this.toastService.showToast("Ошибка при загрузке листа задач");
+        },
+        complete: () => this.isLoading = false,
     });
   }
 
@@ -64,10 +66,10 @@ export class ToDoListComponent implements OnInit{
     this.toDoListService.addToDoListItem(formData.text, formData.description).subscribe({
         next: (addedToDoListItem) => {
             this.ToDo.push(addedToDoListItem);
-            this.toastService.showToast("Item added");
+            this.toastService.showToast("Задача добавлена");
         },
         error: () => {
-            this.toastService.showToast("Failed to add todo");
+            this.toastService.showToast("Ошибка при добавлении задачи");
         }
     });
   }
@@ -75,17 +77,17 @@ export class ToDoListComponent implements OnInit{
   editToDoListItemTitleById(itemId: IToDoListItem["id"], title: IToDoListItem["text"]): void {
     if (this.toDoListService.editItemTitleById(itemId, title)) {
         this.editedItemId = null;
-        this.toastService.showToast("Item edited");
+        this.toastService.showToast("Задача изменена");
     }
     this.toDoListService.editItemTitleById(itemId, title).subscribe({
         next: (editedToDoListItem) => {
             const deprecatedItemIndex = this.ToDo.findIndex(item => item.id === editedToDoListItem.id);
             this.ToDo[deprecatedItemIndex] = editedToDoListItem;
             this.editedItemId = null;
-            this.toastService.showToast("Item edited");
+            this.toastService.showToast("Задача изменена");
         },
         error: () => {
-            this.toastService.showToast("Failed to edit todo");
+            this.toastService.showToast("Ошибка при изменении задачи");
         }
     });
 }
@@ -95,10 +97,10 @@ export class ToDoListComponent implements OnInit{
         next: (editedToDoListItem) => {
             const deprecatedItemIndex = this.ToDo.findIndex(item => item.id === editedToDoListItem.id);
             this.ToDo[deprecatedItemIndex] = editedToDoListItem;
-            this.toastService.showToast("Task status has been changed");
+            this.toastService.showToast("Статус задачи был изменен");
         },
         error: () => {
-            this.toastService.showToast("Failed to edit todo");
+            this.toastService.showToast("Ошибка при изменении задачи");
         }
     });
   }

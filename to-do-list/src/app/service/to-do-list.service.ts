@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { EToDoListItemStatus, IToDoListItem } from "../content/models/to-do-list";
+import { EToDoListItemStatus, IToDoListItem } from "../models/to-do-list";
 
 @Injectable()
 

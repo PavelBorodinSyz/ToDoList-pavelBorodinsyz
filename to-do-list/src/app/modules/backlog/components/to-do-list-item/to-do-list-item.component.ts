@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { ToastService } from '../../../service/toast.service';
-import { EToDoListItemStatus, IToDoListItem } from '../../models/to-do-list';
+import { ToastService } from '../../../../service/toast.service';
+import { EToDoListItemStatus, IToDoListItem } from '../../../../models/to-do-list';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
@@ -9,7 +9,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   styleUrl: './to-do-list-item.component.scss'
 })
 
-export class ToDoListComponentItem implements OnInit {
+export class ToDoListItemComponent implements OnInit {
     @Input() item!: IToDoListItem;
 
     @Output() emitDelete = new EventEmitter<IToDoListItem["id"]>();
