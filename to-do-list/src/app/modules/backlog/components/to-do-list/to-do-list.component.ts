@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ToDoListService } from '../../../../service/to-do-list.service';
-import { ToastService } from '../../../../service/toast.service';
 import { EToDoListItemStatus, IToDoListItem, IToDoListItemCreate } from '../../../../models/to-do-list';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { ActivatedRoute } from '@angular/router';
-import { tap } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
+import { CreateItemFormData, ToDoListDataService } from '../../../../service/to-do-list-data.service';
 
 
 @Component({
@@ -14,109 +13,47 @@ import { tap } from 'rxjs';
 })
 
 export class ToDoListComponent implements OnInit{
-  public ToDo: Array<IToDoListItem> = [];
-  public isLoading: boolean = true;
-  public editedItemId: IToDoListItem["id"] | null = null;
-  public toDoListItemEnum = EToDoListItemStatus;
+    public toDoListItems$!: Observable<Array<IToDoListItem>>;
+    public isLoading: boolean = false;
+    public editedItemId: IToDoListItem["id"] | null = null;
+    public toDoListItemEnum = EToDoListItemStatus;
 
-  constructor(protected service: ToDoListService,
-              private toastService: ToastService,
-              private activatedRoute: ActivatedRoute,
-              private toDoListService: ToDoListService) { }
+    constructor(private activatedRoute: ActivatedRoute,
+                private toDoListDataService: ToDoListDataService) { }
 
-  ngOnInit(): void {
-    this.getToDoList();
-  }
-
-  protected deleteItem(id: number){
-        this.toDoListService.deleteToDoListItemById(id).subscribe({
-            next: () => {
-                const deletedItemIndex = this.ToDo.findIndex(item => item.id === id);
-                if (deletedItemIndex > -1)
-                    this.ToDo.splice(deletedItemIndex, 1);
-                this.toastService.showToast("Задача удалена");
-            },
-            error: () => {
-                this.toastService.showToast("Ошибка при удалении задачи");
-            }
-        });
+    ngOnInit(): void {
+        this.toDoListItems$ = this.toDoListDataService.getItems;
+        this.toDoListDataService.update();
     }
 
-  public get getItemIdFromRoute(): number | null {
-    return this.activatedRoute.snapshot.children.length === 0 ?
-      null : +this.activatedRoute.snapshot.children[0].params['id'];
-  }
+    public deleteItem(id: number){
+        this.toDoListDataService.deleteItemById(id);
+    }
 
-  getToDoList(): void {
-    this.toDoListService.getToDoListItems().pipe(
-        tap(() => this.isLoading = true),
-    )
-    .subscribe({
-        next: (receivedToDoListItems) => {
-            this.ToDo = receivedToDoListItems;
-        },
-        error: () => {
-            this.toastService.showToast("Ошибка при загрузке листа задач");
-        },
-        complete: () => this.isLoading = false,
-    });
-  }
+    public get getItemIdFromRoute(): number | null {
+        return this.activatedRoute.snapshot.children.length === 0 ?
+        null : +this.activatedRoute.snapshot.children[0].params['id'];
+    }
 
-  addToDoListItem(formData: IToDoListItemCreate): void {
-    this.toDoListService.addToDoListItem(formData.text, formData.description).subscribe({
-        next: (addedToDoListItem) => {
-            this.ToDo.push(addedToDoListItem);
-            this.toastService.showToast("Задача добавлена");
-        },
-        error: () => {
-            this.toastService.showToast("Ошибка при добавлении задачи");
-        }
-    });
-  }
+    addToDoListItem(formData: CreateItemFormData): void {
+        this.toDoListDataService.addItem(formData);
+    }
 
-  editToDoListItemTitleById(itemId: IToDoListItem["id"], title: IToDoListItem["text"]): void {
-    if (this.toDoListService.editItemTitleById(itemId, title)) {
+    editToDoListItemTitleById(itemId: IToDoListItem["id"], title: IToDoListItem["text"]): void {
+        this.toDoListDataService.editItemTitleById(itemId, title);
         this.editedItemId = null;
-        this.toastService.showToast("Задача изменена");
     }
-    this.toDoListService.editItemTitleById(itemId, title).subscribe({
-        next: (editedToDoListItem) => {
-            const deprecatedItemIndex = this.ToDo.findIndex(item => item.id === editedToDoListItem.id);
-            this.ToDo[deprecatedItemIndex] = editedToDoListItem;
-            this.editedItemId = null;
-            this.toastService.showToast("Задача изменена");
-        },
-        error: () => {
-            this.toastService.showToast("Ошибка при изменении задачи");
-        }
-    });
-}
 
-  editToDoListItemStatusById(itemId: IToDoListItem["id"], itemStatus: IToDoListItem["status"]): void {
-    this.toDoListService.editItemStatusById(itemId, itemStatus).subscribe({
-        next: (editedToDoListItem) => {
-            const deprecatedItemIndex = this.ToDo.findIndex(item => item.id === editedToDoListItem.id);
-            this.ToDo[deprecatedItemIndex] = editedToDoListItem;
-            this.toastService.showToast("Статус задачи был изменен");
-        },
-        error: () => {
-            this.toastService.showToast("Ошибка при изменении задачи");
-        }
-    });
-  }
+    editToDoListItemStatusById(itemId: IToDoListItem["id"], itemStatus: IToDoListItem["status"]): void {
+        this.toDoListDataService.editItemStatusById(itemId, itemStatus);
+    }
 
-  onStatusFilterChange(matButtonToggleChange: MatButtonToggleChange): void {
-    if (matButtonToggleChange.value === null)
-        this.getToDoList();
-    else
-        this.toDoListService.getToDoListItemsByStatus(matButtonToggleChange.value).subscribe({
-            next: (receivedToDoListItems) => {
-                this.ToDo = receivedToDoListItems;
-            },
-            error: () => {
-                this.toastService.showToast("Failed to load todo list");
-            }
-        });
-  }
+    onStatusFilterChange(matButtonToggleChange: MatButtonToggleChange): void {
+        this.toDoListItems$ = matButtonToggleChange.value === null ?
+        this.toDoListDataService.getItems :
+        this.toDoListDataService.getItems.pipe(
+            map(items => items.filter(item => item.status === matButtonToggleChange.value)),
+        );
+    }
 }
 

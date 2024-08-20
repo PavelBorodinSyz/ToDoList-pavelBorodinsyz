@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { ToDoListService } from '../../../../service/to-do-list.service';
-import { ToastService } from '../../../../service/toast.service';
 import { ActivatedRoute } from '@angular/router';
 import { IToDoListItem } from '../../../../models/to-do-list';
-import { Subject, takeUntil } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ToDoListDataService } from '../../../../service/to-do-list-data.service';
 
 @Component({
   selector: 'app-to-do-list-view',
@@ -12,29 +10,26 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrl: './to-do-list-view.component.scss'
 })
 export class ToDoListViewComponent {
-  public description!: IToDoListItem["description"];
-  public componentDestroyed$: Subject<boolean> = new Subject<boolean>();
+    public description!: IToDoListItem["description"];
+    public componentDestroyed$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private activatedRoute: ActivatedRoute,
-      private toastService: ToastService,
-      private toDoListService: ToDoListService) { }
+    constructor(private activatedRoute: ActivatedRoute,
+                private toDoListDataService: ToDoListDataService) { }
 
-  ngOnDestroy(): void {
-      this.componentDestroyed$.next(true);
-      this.componentDestroyed$.complete();
-  }
+    ngOnDestroy(): void {
+        this.componentDestroyed$.next(true);
+        this.componentDestroyed$.complete();
+    }
 
-  ngOnInit(): void {
-      this.activatedRoute.params.pipe(takeUntil(this.componentDestroyed$)).subscribe((params) => {
-          this.toDoListService.getToDoListItemById(params["id"]).subscribe({
-              next: (toDoListItem) => {
-                  this.description = toDoListItem.description;
-              },
-              error: (err: HttpErrorResponse) => {
-                  this.toastService.showToast(err.message);
-              },
-          });
-      });
-  }
-
+    ngOnInit(): void {
+        this.activatedRoute.params.pipe(takeUntil(this.componentDestroyed$)).subscribe((params) => {
+            this.toDoListDataService.getItems.pipe(
+                takeUntil(this.componentDestroyed$),
+                map(items => items.find(item => item.id === +params["id"])),
+            ).subscribe(item => {
+                if (item)
+                    this.description = item.description;
+            });
+        });
+    }
 }
