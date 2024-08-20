@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { ToastService } from '../../../../service/toast.service';
 import { EToDoListItemStatus, IToDoListItem } from '../../../../models/to-do-list';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { translations } from '../../../../../locale/translations';
 
 @Component({
   selector: 'app-to-do-list-item',
@@ -18,6 +19,7 @@ export class ToDoListItemComponent implements OnInit {
     isEditMode: boolean = false;
     itemTitle!: IToDoListItem["text"];
     public toDoListItemStatus = EToDoListItemStatus;
+    readonly translations = translations;
 
     constructor(public toastService: ToastService){}
 

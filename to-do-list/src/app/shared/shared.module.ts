@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { IconButtonComponent } from './icon-button/icon-button.component';
 import { AngularMaterialModule } from '../angular-material.module';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
+import { LanguageSelectorComponent } from './language-selector/language-selector.component';
 
 @NgModule({
   declarations: [
@@ -17,11 +18,13 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
     TooltipComponent,
     TooltipDirective,
     IconButtonComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    LanguageSelectorComponent
   ],
   imports: [
     CommonModule,
-    AngularMaterialModule
+    AngularMaterialModule,
+    LanguageSelectorComponent
   ],
   exports: [DeleteButtonComponent, SaveButtonComponent, TooltipDirective, IconButtonComponent, LoadingSpinnerComponent]
 })

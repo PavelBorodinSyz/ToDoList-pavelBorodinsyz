@@ -1,6 +1,7 @@
 import { Component, Output, OnInit, EventEmitter } from '@angular/core';
 import { IToDoListItemCreate } from '../../../../models/to-do-list';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { translations } from '../../../../../locale/translations';
 
 @Component({
   selector: 'app-to-do-list-create',
@@ -10,6 +11,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class ToDoListCreateComponent implements OnInit {
   public toDoItemForm!: FormGroup;
   @Output() emitNewItem = new EventEmitter<IToDoListItemCreate>();
+  readonly translations = translations;
 
   constructor(private formBuilder: FormBuilder) { }
 

@@ -14,3 +14,8 @@ export enum EToDoListItemStatus {
     InProgress = "InProgress",
     Completed = "Completed"
 }
+
+export const translatedToDoListItemStatus: { [status in EToDoListItemStatus]: string } = {
+    [EToDoListItemStatus.InProgress]: $localize`:@@in_progress:InProgress`,
+    [EToDoListItemStatus.Completed]: $localize`:@@completed:Completed`,
+}

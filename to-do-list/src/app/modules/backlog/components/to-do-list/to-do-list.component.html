@@ -7,11 +7,11 @@
     <mat-card>
         <mat-card-header>
             <mat-card-title>
-              <span>Лист задач</span>
+              <span i18n="@@show_todo">Show todo: </span>
               <mat-button-toggle-group [value]="null" (change)="onStatusFilterChange($event)">
-                <mat-button-toggle [value]="null">Все</mat-button-toggle>
-                <mat-button-toggle [value]="toDoListItemEnum.InProgress">В процессе</mat-button-toggle>
-                <mat-button-toggle [value]="toDoListItemEnum.Completed">Выполнены</mat-button-toggle>
+                <mat-button-toggle [value]="null" i18n="@@all">All</mat-button-toggle>
+                <mat-button-toggle [value]="toDoListItemEnum.InProgress">{{translatedToDoListItemStatus['InProgress']}}</mat-button-toggle>
+                <mat-button-toggle [value]="toDoListItemEnum.Completed">{{translatedToDoListItemStatus.Completed}}</mat-button-toggle>
             </mat-button-toggle-group>
             </mat-card-title>
           </mat-card-header>
@@ -32,7 +32,7 @@
                   <router-outlet></router-outlet>
               </ng-template>
               <ng-template #hintTemplate>
-                  <p>Выберите задачу...</p>
+                  <p i18n="@@select_list_item">Select todo list item...</p>
               </ng-template>
             </div>
           </mat-card-content>
